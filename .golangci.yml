@@ -1,0 +1,213 @@
+version: "2"
+
+run:
+  timeout: 10m
+  tests: true
+
+issues:
+  max-same-issues: 0
+
+formatters:
+  enable:
+    - goimports
+    - golines
+    - gofumpt
+    - gci
+
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/my/project
+
+    golines:
+      max-len: 100
+
+    gci:
+      sections:
+        - standard
+        - default
+  
+linters:
+  enable:
+    # correctness / bugs
+    - govet
+    - staticcheck
+    - errcheck
+    - ineffassign
+    - unused
+    - nilerr
+    - nilnil
+    - nilnesserr
+    - rowserrcheck
+    - sqlclosecheck
+    - bodyclose
+    - exhaustive
+    - gochecksumtype
+    - copyloopvar
+    - intrange
+    - unparam
+    - wastedassign
+    - unconvert
+
+    # security
+    - gosec
+    - bidichk
+    - canonicalheader
+    - nosprintfhostport
+
+    # architecture / API
+    - depguard
+    - forbidigo
+    - iface
+    - reassign
+    - recvcheck
+    - protogetter
+    - testpackage
+
+    # style / maintainability
+    - revive
+    - gocritic
+    - godoclint
+    - godot
+    - whitespace
+    - asciicheck
+    - errname
+    - errorlint
+    - predeclared
+    - nonamedreturns
+    - nakedret
+    - nestif
+    - mnd
+    - makezero
+    - mirror
+    - iotamixing
+    - loggercheck
+    - sloglint
+    - promlinter
+    - testifylint
+    - usestdlibvars
+    - usetesting
+    - testableexamples
+    - nolintlint
+    - wsl_v5
+
+    # complexity
+    - cyclop
+    - gocyclo
+    - gocognit
+    - funlen
+    - dupl
+
+  settings:
+
+    govet:
+      enable-all: true
+      settings:
+        shadow:
+          strict: true
+
+    staticcheck:
+      checks:
+        - all
+        - -ST1000
+
+    errcheck:
+      check-type-assertions: true
+      check-blank: true
+      exclude-functions:
+        - io.WriteString
+
+    exhaustive:
+      explicit-exhaustive-switch: true
+      check:
+        - map
+
+    cyclop:
+      max-complexity: 15
+      package-average: 8.0
+
+    gocyclo:
+      min-complexity: 10
+
+    gocognit:
+      min-complexity: 15
+
+    funlen:
+      lines: 80
+      statements: 40
+
+    dupl:
+      threshold: 80
+
+    gocritic:
+      enable-all: true
+      disabled-checks:
+        - emptyStringTest
+        - builtinShadow
+        - importShadow
+      settings:
+        captLocal:
+          paramsOnly: false
+        elseif:
+          skipBalanced: false
+        hugeParam:
+          sizeThreshold: 512
+
+    revive:
+      confidence: 0.9
+      rules:
+        - name: atomic
+        - name: bare-return
+        - name: cognitive-complexity
+          arguments: [15]
+        - name: cyclomatic
+          arguments: [10]
+        - name: early-return
+        - name: empty-block
+        - name: error-strings
+        # - name: exported # May be later
+        - name: function-length
+          arguments: [40, 60]
+        - name: line-length-limit
+          arguments: [120]
+        - name: max-public-structs
+          arguments: [15]
+        - name: nested-structs
+        - name: superfluous-else
+        - name: var-naming
+        - name: waitgroup-by-value
+
+    depguard:
+      rules:
+        default:
+          files: ["$all"]
+          deny:
+            - pkg: unsafe
+              desc: unsafe is forbidden
+            - pkg: reflect
+              desc: reflection is forbidden
+
+    predeclared:
+      ignore:
+        - min
+        - max
+
+    mnd:
+      ignored-functions:
+        - time.Sleep
+        - time.Duration
+        - strconv.*
+
+    nolintlint:
+      require-explanation: true
+      require-specific: true
+
+    sloglint:
+      no-global: all
+      context: all
+    
+    wsl_v5:
+      allow-first-in-block: true
+      allow-whole-block: false
+      branch-max-lines: 2
+      case-max-lines: 0
